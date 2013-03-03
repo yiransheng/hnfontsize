@@ -12,3 +12,5 @@ Drag hnfontsize.crx into Chrome to install, or get it at [Chrome Web Store](http
 ScreenShot:
 ============
 ![screenshot](http://i.imgur.com/XZdelvX.jpg)
+
+

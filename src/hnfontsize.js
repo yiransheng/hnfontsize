@@ -5,6 +5,8 @@
     page = page.replace(/\?\S*$/, "");
     if (/^(submit|login)$/i.test(page)) return;
 
+    var new_style = document.createElement("style");
+    document.body.appendChild(new_style);
 
     // convenience functions
     var _each = Array.prototype.forEach ? function(arraylike, iterator) {
@@ -44,36 +46,20 @@
         return document.getElementsByTagName("tbody")[1].firstChild;
     };
 
-    // finding current style property of a node
-    var getStyle = function (el,styleProp){
+    // finding current style property of a class
+    var getStyle = function (_class,styleProp){
+
+        var el = document.createElement("p");
+        el.className = _class;
+        document.body.appendChild(el);
+
         var y;
         if (window.getComputedStyle)
             y = window.getComputedStyle(el,null)[styleProp];
         else if (el.currentStyle) y = el.currentStyle[styleProp];
+        document.body.removeChild(el);
         return y;
-    }
-
-
-    var hn_classes = ["title", "subtext", "comment", "comhead"];
-
-    var fontsetting = {factor : 100};
-
-    var found;
-
-
-    _each(hn_classes, function(_class) {
-        var child,nodelist = document.getElementsByClassName(_class),fs;
-        if (nodelist.length) {
-            found = true;
-            child = nodelist[0];
-            while (!(fs=getStyle(child, "fontSize"))) {
-                child = child.firstChild;
-            }
-            fontsetting[_class] = parseInt(fs);
-        }
-    });
-
-    if (!found) return;
+    };
 
     // rewrite a style element for updating font size changes
     var overrideStyle = function() {
@@ -88,24 +74,6 @@
         });             
         return y
     };
-
-    var controller = document.createElement("td");
-    controller.setAttribute("style", "position: relative; top: -5px; font-weight: bold; font-size: 13px; color: #fff; display: inline; text-align:right;");
-    controller.innerHTML =
-        '<input type="range" min="80" max="250" style = "position:relative;top: 2px; width: 50%; max-width: 250px; height: 10px;" value="'
-        + fontsetting.factor 
-        + '"><span>'
-        + fontsetting.factor
-        + '% </span><img src="'
-        + chrome.extension.getURL("font_size.gif")
-        + '" style="position:relative; top: 6px;"/>'
-
-    var container = getContainer();
-    container.insertBefore(controller, container.lastChild);
-
-    var new_style = document.createElement("style");
-    document.body.appendChild(new_style);
-
     // wrapper for mouse events callback, so than mousemove dont 
     // trigger dom updates too often
     var adjustFont = function(limit) {
@@ -135,8 +103,33 @@
         }
     };
 
+
+    var hn_classes = ["title", "subtext", "comment", "comhead"];
+
+    var fontsetting = {factor : 100};
+
+    _each(hn_classes, function(_class) {
+        var fs = getStyle(_class, "fontSize");
+        console.log(fs);
+        fontsetting[_class] = parseInt(fs);
+    });
+
+
+    var controller = document.createElement("td");
+    controller.setAttribute("style", "position: relative; top: -5px; font-weight: bold; font-size: 13px; color: #fff; display: inline; text-align:right;");
+    controller.innerHTML =
+        '<input type="range" min="80" max="250" style = "position:relative;top: 2px; width: 50%; max-width: 250px; height: 10px;" value="'
+        + fontsetting.factor 
+        + '"><span>'
+        + fontsetting.factor
+        + '% </span><img src="'
+        + chrome.extension.getURL("font_size.gif")
+        + '" style="position:relative; top: 6px;"/>'
+
+    var container = getContainer();
+    container.insertBefore(controller, container.lastChild);
+
     var meter = controller.firstChild;
-    meter.onmousedown = meter.onmouseup = meter.onmousemove = adjustFont(100);
 
     chrome.storage.sync.get("font_adjustment", function(item) {
         fontsetting.factor = item.font_adjustment || 100;
@@ -149,6 +142,7 @@
             //
         }
     });
+    meter.onmousedown = meter.onmouseup = meter.onmousemove = adjustFont(100);
 
 
 })();
