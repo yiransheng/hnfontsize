@@ -3,7 +3,7 @@
     // ignore certain pages
     var page = document.URL.substr(document.URL.lastIndexOf('/') + 1);
     page = page.replace(/\?\S*$/, "");
-    if (/^(submit|x|login)$/i.test(page)) return;
+    if (/^(submit|login)$/i.test(page)) return;
 
 
     // convenience functions
@@ -58,10 +58,13 @@
 
     var fontsetting = {factor : 100};
 
+    var found;
+
 
     _each(hn_classes, function(_class) {
         var child,nodelist = document.getElementsByClassName(_class),fs;
         if (nodelist.length) {
+            found = true;
             child = nodelist[0];
             while (!(fs=getStyle(child, "fontSize"))) {
                 child = child.firstChild;
@@ -69,6 +72,8 @@
             fontsetting[_class] = parseInt(fs);
         }
     });
+
+    if (!found) return;
 
     // rewrite a style element for updating font size changes
     var overrideStyle = function() {
