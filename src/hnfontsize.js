@@ -56,7 +56,8 @@
 
     var hn_classes = ["title", "subtext", "comment", "comhead"];
 
-    var fontsetting = {factor : localStorage.getItem("font_adjustment") || 100};
+    var fontsetting = {factor : 100};
+
 
     _each(hn_classes, function(_class) {
         var child,nodelist = document.getElementsByClassName(_class),fs;
@@ -118,6 +119,9 @@
                 fontsetting.factor = +e.target.value;
                 new_style.innerText = overrideStyle();
                 e.target.nextSibling.innerText = fontsetting.factor + "% ";
+                chrome.storage.sync.set({'font_adjustment': fontsetting.factor}, function() {
+                    // console.log("Font-size setting saved.");
+                });
             }
             if (e.type == "mouseup") {
                 operating = false;
@@ -129,10 +133,17 @@
     var meter = controller.firstChild;
     meter.onmousedown = meter.onmouseup = meter.onmousemove = adjustFont(100);
 
-    if (fontsetting.factor !== 100) {
-        new_style.innerText = overrideStyle();
-        meter.nextSibling.innerText = fontsetting.factor + "% ";
-    }
+    chrome.storage.sync.get("font_adjustment", function(item) {
+        fontsetting.factor = item.font_adjustment;
+        try {
+            if (item !== 100) {
+                new_style.innerText = overrideStyle();
+                meter.nextSibling.innerText = fontsetting.factor + "% ";
+            }
+        } catch(e) {
+            //
+        }
+    });
 
 
 })();

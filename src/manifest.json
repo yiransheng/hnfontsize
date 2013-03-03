@@ -14,7 +14,8 @@
     }
   ],
   "permissions": [
-    "http://news.ycombinator.com/*"
+    "http://news.ycombinator.com/*", 
+    "storage"
   ], 
   "web_accessible_resources" : ["font_size.gif"]
 }
