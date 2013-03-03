@@ -134,7 +134,7 @@
     meter.onmousedown = meter.onmouseup = meter.onmousemove = adjustFont(100);
 
     chrome.storage.sync.get("font_adjustment", function(item) {
-        fontsetting.factor = item.font_adjustment;
+        fontsetting.factor = item.font_adjustment || 100;
         try {
             if (item !== 100) {
                 new_style.innerText = overrideStyle();
