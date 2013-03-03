@@ -7,6 +7,8 @@ Instead of getting a new "theme", I though it'd be nice to only change this one 
 
 It allows the user to drag a controller and resize all fonts proportionally to their original size, and remembers the setting to localStorage. Hopefully this can help some hn reader with the same problem as well.  
 
-Screen Shot:
+Drag hnfontsize.crx into Chrome to install, or get it at [Chrome Web Store](https://chrome.google.com/webstore/detail/adjust-hackernews-font-si/aeddhhildjkggkgmnpodilmofhbalmop)
+
+ScreenShot:
 ============
 ![screenshot](http://i.imgur.com/XZdelvX.jpg)
