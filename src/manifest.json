@@ -1,0 +1,21 @@
+{
+  "name": "Adjust HackerNews Font Size",
+  "version": "1.1",
+  "icons" : {
+      "48" : "icon48.png",
+      "128": "icon128.png"
+  },
+  "manifest_version" : 2,
+  "description": "Adjust news.ycombinator.com font size, and save your local setting.",
+  "content_scripts": [
+    {
+      "matches": ["http://news.ycombinator.com/*"],
+      "js": ["hnfontsize.js"]
+    }
+  ],
+  "permissions": [
+    "http://news.ycombinator.com/*"
+  ], 
+  "web_accessible_resources" : ["font_size.gif"]
+}
+
